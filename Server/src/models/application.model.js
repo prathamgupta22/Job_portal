@@ -17,7 +17,16 @@ const applicationSchema = new mongoose.Schema(
       enum: ["pending", "accepted", "rejected"],
       default: "pending",
     },
+    title: {
+      type: String,
+      required: true, // Title of the job, referenced from Job
+    },
+    company: {
+      type: String,
+      required: true, // Company name, referenced from Job
+    },
   },
   { timestamps: true }
 );
+
 export const Application = mongoose.model("Application", applicationSchema);
