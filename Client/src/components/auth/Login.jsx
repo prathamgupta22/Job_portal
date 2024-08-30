@@ -4,20 +4,21 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { RadioGroup } from "../ui/radio-group";
 import { Button } from "../ui/button";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { USER_API_END_POINT } from "@/utils/constant";
 import { useDispatch, useSelector } from "react-redux";
 import { setLoading, setUser } from "@/redux/authSlice";
 import { Loader2 } from "lucide-react";
 
 const Login = () => {
+  const location = useLocation(); // Get the state passed from signup
   const [input, setInput] = useState({
-    email: "",
+    email: location.state?.email || "", // Pre-fill if data is available
     password: "",
-    role: "",
+    role: location.state?.role || "", // Pre-fill if data is available
   });
+
   const { loading } = useSelector((store) => store.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -25,14 +26,19 @@ const Login = () => {
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
+
   const submitHandler = async (e) => {
     e.preventDefault();
     try {
       dispatch(setLoading(true));
-      const res = await axios.post(`${USER_API_END_POINT}/login`, input, {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      });
+      const res = await axios.post(
+        `${import.meta.env.VITE_APP}/user/login`,
+        input,
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
       if (res.data.success) {
         dispatch(setUser(res.data.user));
         navigate("/");
@@ -114,7 +120,6 @@ const Login = () => {
               Login
             </Button>
           )}
-
           <div className="flex justify-center items-center">
             <span className="text-sm font-semibold">
               Don't have an account?{" "}

@@ -5,13 +5,15 @@ export const applyJob = async (req, res) => {
   try {
     const userId = req.id;
     const jobId = req.params.id;
+
     if (!jobId) {
       return res.status(400).send({
         message: "Job id is required.",
         success: false,
       });
     }
-    // check if the user has already applied for the job
+
+    // Check if the user has already applied for the job
     const existingApplication = await Application.findOne({
       job: jobId,
       applicant: userId,
@@ -24,22 +26,27 @@ export const applyJob = async (req, res) => {
       });
     }
 
-    // check if the jobs exists
-    const job = await Job.findById(jobId);
+    // Check if the job exists
+    const job = await Job.findById(jobId).populate("company");
     if (!job) {
       return res.status(404).send({
         message: "Job not found",
         success: false,
       });
     }
-    // create a new application
+
+    // Create a new application with the required fields
     const newApplication = await Application.create({
       job: jobId,
       applicant: userId,
+      company: job.company._id, // Referencing the company ObjectId
+      title: job.title, // Referencing the job title
     });
 
+    // Update the job with the new application
     job.applications.push(newApplication._id);
     await job.save();
+
     return res.status(201).send({
       message: "Job applied successfully.",
       success: true,
