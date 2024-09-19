@@ -42,16 +42,29 @@ const Navbar = () => {
         {/* Navigation Section */}
         <div className="flex items-center gap-12">
           <ul className="flex font-medium gap-5 items-center text-gray-700">
-            <li className="hover:text-[#6A38C2] cursor-pointer">
-              <Link to="/">Home</Link>
-            </li>
+            {user && user.role === "recruiter" ? (
+              <>
+                <li>
+                  <Link to="/admin/companies">Companies</Link>
+                </li>
+                <li>
+                  <Link to="/admin/jobs">Jobs</Link>
+                </li>
+              </>
+            ) : (
+              <>
+                <li className="hover:text-[#6A38C2] cursor-pointer">
+                  <Link to="/">Home</Link>
+                </li>
 
-            <li className="hover:text-[rgb(106,56,194)] cursor-pointer">
-              <Link to="/jobs">Jobs</Link>
-            </li>
-            <li className="hover:text-[#6A38C2] cursor-pointer">
-              <Link to="/browse">Browse</Link>
-            </li>
+                <li className="hover:text-[rgb(106,56,194)] cursor-pointer">
+                  <Link to="/jobs">Jobs</Link>
+                </li>
+                <li className="hover:text-[#6A38C2] cursor-pointer">
+                  <Link to="/browse">Browse</Link>
+                </li>
+              </>
+            )}
           </ul>
           {!user ? (
             <div className="flex items-center gap-2">
@@ -93,12 +106,15 @@ const Navbar = () => {
                     </div>
                   </div>
                   <div className="flex flex-col my-2 text-gray-600">
-                    <div className="flex w-fit items-center gap-2 cursor-pointer hover:text-[#6A38C2] transition duration-150">
-                      <User2 />
-                      <Button variant="link">
-                        <NavLink to="/profile">View Profile</NavLink>
-                      </Button>
-                    </div>
+                    {user && user.role === "student" && (
+                      <div className="flex w-fit items-center gap-2 cursor-pointer hover:text-[#6A38C2] transition duration-150">
+                        <User2 />
+                        <Button variant="link">
+                          <NavLink to="/profile">View Profile</NavLink>
+                        </Button>
+                      </div>
+                    )}
+
                     <div className="flex w-fit items-center gap-2 cursor-pointer hover:text-red-600 transition duration-150">
                       <LogOut />
                       <Button onClick={logoutHandler} variant="link">
