@@ -125,44 +125,44 @@ export const updateStatus = async (req, res) => {
   try {
     const { status } = req.body;
     const applicationId = req.params.id;
+
     if (!status) {
       return res.status(400).send({
-        message: "status is required",
+        message: "Status is required",
         success: false,
       });
     }
 
-    // find the application by applicant id
-    const application = await Application.findOne({ _id: applicationId });
-    if (!application) {
-      return res.status(404).send({
-        message: "Application not found.",
+    // Validate if the status is either "Accepted" or "Rejected"
+    const validStatuses = ["accepted", "rejected"];
+    if (!validStatuses.includes(status.toLowerCase())) {
+      return res.status(400).send({
+        message: "Invalid status",
         success: false,
       });
     }
-    if (!application.title || !application.company) {
-      const job = await Job.findById(application.job);
-      if (!job) {
-        return res.status(404).send({
-          message: "Job not found.",
-          success: false,
-        });
-      }
-      application.title = job.title;
-      application.company = job.company;
+
+    // Find the application
+    const application = await Application.findById(applicationId);
+    if (!application) {
+      return res.status(404).send({
+        message: "Application not found",
+        success: false,
+      });
     }
-    // update the status
+
+    // Update the application status
     application.status = status.toLowerCase();
     await application.save();
 
     return res.status(200).send({
-      message: "Status updated successfully.",
+      message: "Status updated successfully",
       success: true,
     });
   } catch (error) {
-    console.log(error);
-    return res.status({
-      message: "Error in update status API",
+    console.error(error);
+    return res.status(500).send({
+      message: "Error updating application status",
       success: false,
     });
   }

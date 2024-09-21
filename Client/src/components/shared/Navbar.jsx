@@ -35,9 +35,11 @@ const Navbar = () => {
       <div className="flex justify-between items-center mx-auto max-w-7xl h-16 px-4">
         {/* Logo Section */}
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">
-            Easy<span className="text-[#F83002]">Hire</span>
-          </h1>
+          <Link to="/">
+            <h1 className="text-3xl font-bold tracking-tight hover:scale-105 transition-all ease-out duration-300">
+              Easy<span className="text-[#F83002]">Hire</span>
+            </h1>
+          </Link>
         </div>
         {/* Navigation Section */}
         <div className="flex items-center gap-12">

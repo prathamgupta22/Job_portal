@@ -41,10 +41,7 @@ const Job = ({ job }) => {
           size="icon"
         >
           <Avatar className="h-12 w-12">
-            <AvatarImage
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRfUlGcxUmqLQ08e_4msz7RwXoNtq6yR_f_PA&s"
-              alt="Company logo"
-            />
+            <AvatarImage src={job?.company.logo} />
           </Avatar>
         </Button>
         <div>
