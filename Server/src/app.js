@@ -3,7 +3,6 @@ import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 
-//dotenv config
 dotenv.config();
 
 const app = express();
@@ -13,7 +12,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const corsOptions = {
-  origin: "http://localhost:5173",
+  origin: process.env.CORS_ORIGIN, // Using the environment variable
   credentials: true,
 };
 
