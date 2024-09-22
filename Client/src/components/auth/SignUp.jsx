@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "./../shared/Navbar";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -20,26 +20,55 @@ const SignUp = () => {
     role: "",
     file: "",
   });
-  const { loading } = useSelector((store) => store.auth);
+  const { loading, user } = useSelector((store) => store.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
   const changeEventHandler = (e) => {
     setInput({ ...input, [e.target.name]: e.target.value });
   };
+
   const changeFileHandler = (e) => {
     setInput({ ...input, file: e.target.files?.[0] });
   };
+
   const submitHandler = async (e) => {
     e.preventDefault();
+
+    // Validation: Check if all required fields are filled
+    if (!input.fullname) {
+      toast.error("Please provide your full name.");
+      return;
+    }
+    if (!input.email) {
+      toast.error("Please provide your email.");
+      return;
+    }
+    if (!input.phoneNumber) {
+      toast.error("Please provide your phone number.");
+      return;
+    }
+    if (!input.password) {
+      toast.error("Please provide a password.");
+      return;
+    }
+    if (!input.role) {
+      toast.error("Please select your role.");
+      return;
+    }
+    if (!input.file) {
+      toast.error("Please upload your profile image.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("fullname", input.fullname);
     formData.append("email", input.email);
     formData.append("phoneNumber", input.phoneNumber);
     formData.append("password", input.password);
     formData.append("role", input.role);
-    if (input.file) {
-      formData.append("file", input.file);
-    }
+    formData.append("file", input.file);
+
     try {
       dispatch(setLoading(true));
       const res = await axios.post(
@@ -61,10 +90,14 @@ const SignUp = () => {
       console.log(error);
       toast.error(error.response.data.message);
     } finally {
-      setLoading(false);
+      dispatch(setLoading(false));
     }
   };
-
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  });
   return (
     <div>
       <Navbar />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "./../shared/Navbar";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -12,14 +12,14 @@ import { setLoading, setUser } from "@/redux/authSlice";
 import { Loader2 } from "lucide-react";
 
 const Login = () => {
-  const location = useLocation(); // Get the state passed from signup
+  const location = useLocation();
   const [input, setInput] = useState({
-    email: location.state?.email || "", // Pre-fill if data is available
+    email: location.state?.email || "",
     password: "",
-    role: location.state?.role || "", // Pre-fill if data is available
+    role: location.state?.role || "",
   });
 
-  const { loading } = useSelector((store) => store.auth);
+  const { loading, user } = useSelector((store) => store.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -51,6 +51,12 @@ const Login = () => {
       dispatch(setLoading(false));
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  });
 
   return (
     <div>

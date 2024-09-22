@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
 import { Label } from "./ui/label";
+import { useDispatch } from "react-redux";
+import { setSearchedQuery } from "@/redux/jobSlice";
 
 const filterData = [
   {
@@ -18,11 +20,26 @@ const filterData = [
 ];
 
 const FilterCard = () => {
+  const [selectedValue, setSelectedValue] = useState("");
+  const dispatch = useDispatch();
+
+  const changeHandler = (value) => {
+    setSelectedValue(value);
+  };
+  useEffect(() => {
+    dispatch(setSearchedQuery(selectedValue));
+    // console.log(selectedValue);
+  }, [selectedValue]);
+
   return (
     <div className="w-full bg-white p-5 rounded-lg shadow-lg">
       <h1 className="font-bold text-purple-900 text-2xl">Filter Jobs</h1>
       <hr className="mt-4 border-t-2 border-gray-300 shadow-md" />
-      <RadioGroup className="mt-6 space-y-5">
+      <RadioGroup
+        className="mt-6 space-y-5"
+        value={selectedValue}
+        onValueChange={changeHandler}
+      >
         {filterData.map(({ filterType, array }, index) => (
           <div key={filterType}>
             <h2 className="font-semibold text-gray-800 text-xl mb-4">
